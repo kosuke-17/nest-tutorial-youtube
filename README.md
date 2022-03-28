@@ -42,3 +42,9 @@ npm i argon2
 ## 環境変数を利用するためのライブラリ
 
 npm i @nestjs/config
+
+## 認証用のライブラリ
+
+npm i @nestjs/passport passport @nestjs/jwt passport-jwt
+
+npm i -D @types/passport-jwt
