@@ -40,15 +40,28 @@ export class AuthService {
       if (e instanceof PrismaClientKnownRequestError) {
         // 一意ではない時のcode
         if (e.code === 'P2002') {
-          throw new ForbiddenException(
-            'Unique constraint failed on the constraint',
-          );
+          throw new ForbiddenException('認証に失敗しました');
         }
       }
       throw e;
     }
   }
-  signin() {
-    return { msg: 'ログインです' };
+  async signin(dto: AuthDto) {
+    // ユーザーのメールアドレスを見つける
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+    // 見つからなければエラー
+    if (!user) throw new ForbiddenException('認証失敗しました。');
+
+    // パスワードを比較する
+    const pwMatche = await argon.verify(user.hash, dto.password);
+    // 正しくなければエラー
+    if (!pwMatche) throw new ForbiddenException('認証に失敗しました。');
+    // ユーザー情報を送る
+    delete user.hash;
+    return user;
   }
 }
