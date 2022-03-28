@@ -34,3 +34,7 @@ npm i @prisma/client
 
 - バリデーション用のライブラリインストール
   npm i class-validator class-transformer
+
+## パスワードをハッシュ化させる
+
+npm i argon2
