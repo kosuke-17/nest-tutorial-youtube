@@ -28,3 +28,9 @@ npm i @prisma/client
   npx prisma init
 - スキーマのマイグレーション
   npx prisma migrate dev
+
+- DB の中を確認
+  npx prisma studio
+
+- バリデーション用のライブラリインストール
+  npm i class-validator class-transformer
