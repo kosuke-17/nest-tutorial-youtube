@@ -16,3 +16,15 @@ nest g module <モジュール名>
 ## Docker compose の利用
 
 ひつようなコードをコピペしただけなので、今後この内容は細分化する
+
+## Prisma
+
+- prisma_Cli のインストール
+
+npm i -D prisma
+npm i @prisma/client
+
+- prisma 初期化
+  npx prisma init
+- スキーマのマイグレーション
+  npx prisma migrate dev
