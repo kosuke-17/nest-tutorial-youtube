@@ -8,7 +8,7 @@ import { JwtGuard } from 'src/auth/guard';
 export class UserController {
   @Get('me')
   // prismaスキーマに基づいたUserの型
-  getMe(@GetUser() user: User, @GetUser('email') email: string) {
+  getMe(@GetUser() user: User) {
     return user;
   }
 
