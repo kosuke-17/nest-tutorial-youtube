@@ -4,6 +4,7 @@ import * as pactum from 'pactum';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { AppModule } from '../src/app.module';
 import { AuthDto } from 'src/auth/dto/auth.dto';
+import { EditUserDto } from 'src/user/dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -126,13 +127,27 @@ describe('App e2e', () => {
           .expectStatus(200);
       });
     });
-    describe('ユーザー情報編集', () => {});
+    describe('ユーザー情報編集', () => {
+      it('現在のユーザー情報を更新する', () => {
+        const dto: EditUserDto = {
+          firstName: '田中',
+          email: 'test2@test2.com',
+        };
+        return pactum
+          .spec()
+          .patch('/users')
+          .withHeaders({
+            Authorization: 'Bearer $S{userAt}',
+          })
+          .expectStatus(200);
+      });
+    });
   });
   // describe('ブックマークス', () => {
   //   describe('ブックマークを作成する', () => {});
   //   describe('ブックマークを取得する', () => {});
-  //   describe('idに紐ずくブックマークを取得する', () => {});
-  //   describe('ブックマークを編集する', () => {});
-  // describe('ブックマークを削除する', () => {});
+  //   describe('idに紐づくブックマークを取得する', () => {});
+  //   describe('idに紐づくブックマークを編集する', () => {});
+  // describe('idに紐づくブックマークを削除する', () => {});
   // });
 });
