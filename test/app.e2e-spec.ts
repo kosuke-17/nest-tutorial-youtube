@@ -41,9 +41,33 @@ describe('App e2e', () => {
   });
 
   describe('認証', () => {
+    const dto: AuthDto = { email: 'test@test.com', password: 'test1234' };
     describe('新規登録', () => {
+      it('メールアドレスが空の時にエラーが表示される', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody({ password: dto.password })
+          .expectStatus(400);
+        // .inspect();
+      });
+      it('パスワードが空の時にエラーが表示される', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody({ email: dto.email })
+          .expectStatus(400);
+        // .inspect();
+      });
+      it('メールアドレスもパスワードも空の時にエラーが表示される', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody({})
+          .expectStatus(400);
+        // .inspect();
+      });
       it('新規登録できること', () => {
-        const dto: AuthDto = { email: 'test@test.com', password: 'test1234' };
         return pactum
           .spec()
           .post('/auth/signup')
@@ -53,7 +77,37 @@ describe('App e2e', () => {
       });
     });
     describe('ログイン', () => {
-      it.todo('ログインできること');
+      it('メールアドレスが空の時にエラーが表示される', () => {
+        return pactum
+          .spec()
+          .post('/auth/signin')
+          .withBody({ password: dto.password })
+          .expectStatus(400);
+        // .inspect();
+      });
+      it('パスワードが空の時にエラーが表示される', () => {
+        return pactum
+          .spec()
+          .post('/auth/signin')
+          .withBody({ email: dto.email })
+          .expectStatus(400);
+        // .inspect();
+      });
+      it('メールアドレスもパスワードも空の時にエラーが表示される', () => {
+        return pactum
+          .spec()
+          .post('/auth/signin')
+          .withBody({})
+          .expectStatus(400);
+        // .inspect();
+      });
+      it('ログインできること', () => {
+        return pactum
+          .spec()
+          .post('/auth/signin')
+          .withBody(dto)
+          .expectStatus(200);
+      });
     });
   });
   // describe('ユーザー', () => {
