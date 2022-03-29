@@ -106,14 +106,28 @@ describe('App e2e', () => {
           .spec()
           .post('/auth/signin')
           .withBody(dto)
-          .expectStatus(200);
+          .expectStatus(200)
+          .stores('userAt', 'access_token');
       });
     });
   });
-  // describe('ユーザー', () => {
-  //   describe('本人情報取得', () => {});
-  //   describe('ユーザー情報編集', () => {});
-  // });
+  describe('ユーザー', () => {
+    describe('本人情報取得', () => {
+      it('現在のユーザー情報を取得する', () => {
+        // getの時にボディにクエストでアクセストークンを保持させないといけないので
+        // ログインのテストでstoresメソッドを利用して保持して、
+        // withHeadersメソッドでセットしている
+        return pactum
+          .spec()
+          .get('/users/me')
+          .withHeaders({
+            Authorization: 'Bearer $S{userAt}',
+          })
+          .expectStatus(200);
+      });
+    });
+    describe('ユーザー情報編集', () => {});
+  });
   // describe('ブックマークス', () => {
   //   describe('ブックマークを作成する', () => {});
   //   describe('ブックマークを取得する', () => {});
