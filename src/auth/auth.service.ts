@@ -3,13 +3,20 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from './dto/auth.dto';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 // ビジネスロジックを記載
 // controllerファイルで呼び出されて実行される
 @Injectable({})
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwt: JwtService,
+    private config: ConfigService,
+  ) {}
   /**
+   * ユーザー新規登録処理
    * @param dto - ユーザーが削除するデータ
    * @returns ユーザ情報(ハッシュなし)
    */
@@ -46,6 +53,11 @@ export class AuthService {
       throw e;
     }
   }
+  /**
+   * ログイン処理
+   * @param dto - ログインに必要なデータ
+   * @returns jwtToken
+   */
   async signin(dto: AuthDto) {
     // ユーザーのメールアドレスを見つける
     const user = await this.prisma.user.findUnique({
@@ -61,7 +73,24 @@ export class AuthService {
     // 正しくなければエラー
     if (!pwMatche) throw new ForbiddenException('認証に失敗しました。');
     // ユーザー情報を送る
-    delete user.hash;
-    return user;
+    return this.signToken(user.id, user.email);
+  }
+  /**
+   * userId,emailを利用したJWTトークンの生成
+   * @param userId - ユーザーID
+   * @param email - メールアドレス
+   * @returns jwtToken
+   */
+  signToken(userId: number, email: string): Promise<string> {
+    const payload = {
+      sub: userId,
+      email,
+    };
+    const secret = this.config.get('JWT_SECRET');
+
+    return this.jwt.signAsync(payload, {
+      expiresIn: '15m',
+      secret: secret,
+    });
   }
 }
