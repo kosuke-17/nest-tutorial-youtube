@@ -52,3 +52,5 @@ npm i -D @types/passport-jwt
 ## テスト用にライブラリインストール
 
 npm i -D pactum
+
+npm i -D dotenv-cli
