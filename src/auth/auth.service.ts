@@ -38,11 +38,8 @@ export class AuthService {
           hash,
         },
       });
-      // リターンに不要なハッシュデータを削除
-      delete user.hash;
-
       // 保存したユーザーを返す
-      return user;
+      return this.signToken(user.id, user.email);
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError) {
         // 一意ではない時のcode
@@ -69,9 +66,9 @@ export class AuthService {
     if (!user) throw new ForbiddenException('認証失敗しました。');
 
     // パスワードを比較する
-    const pwMatche = await argon.verify(user.hash, dto.password);
+    const pwMatches = await argon.verify(user.hash, dto.password);
     // 正しくなければエラー
-    if (!pwMatche) throw new ForbiddenException('認証に失敗しました。');
+    if (!pwMatches) throw new ForbiddenException('認証に失敗しました。');
     // ユーザー情報を送る
     return this.signToken(user.id, user.email);
   }
@@ -100,6 +97,4 @@ export class AuthService {
       access_token: token,
     };
   }
-
-  return;
 }
