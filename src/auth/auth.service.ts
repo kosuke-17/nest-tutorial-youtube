@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 
 // ビジネスロジックを記載
 // controllerファイルで呼び出されて実行される
-@Injectable({})
+@Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
