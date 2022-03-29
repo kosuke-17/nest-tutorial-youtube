@@ -48,3 +48,7 @@ npm i @nestjs/config
 npm i @nestjs/passport passport @nestjs/jwt passport-jwt
 
 npm i -D @types/passport-jwt
+
+## テスト用にライブラリインストール
+
+npm i -D pactum
